@@ -1,32 +1,128 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AO3 文章存档</title>
+    <style>
+      /* 基础样式重置 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Archives</title>
-</head>
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        line-height: 1.6;
+        background: #f5f5f5;
+        color: #333;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-<body>
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 文章列表样式 */
+      .article-list {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+      }
+
+      .article-item {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      .article-item:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+      }
+
+      .article-item:last-child {
+        border-bottom: none;
+      }
+
+      .article-link {
+        color: #3498db;
+        text-decoration: none;
+        flex-grow: 1;
+        word-break: break-word;
+        display: flex;
+        align-items: center;
+      }
+
+      .article-link::before {
+        content: "📄";
+        margin-right: 10px;
+        opacity: 0.6;
+      }
+
+      .article-link:hover {
+        color: #2980b9;
+        text-decoration: underline;
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 600px) {
+        body {
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .article-list {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 AO3 文章存档</h1>
     <script>
-        (async () => {
-            const response = await fetch(`https://api.github.com/repos/${location.hostname.match(/(.*)\.github\.io/)[1]}${location.pathname.match(/\/.*\//)[0]}contents/`);
-            const files = await response.json();
-            const listElement = document.createElement("ul");
-            for (const file of files) {
-                if (file.name != "index.html") {
-                    const itemElement = document.createElement("li");
-                    const linkElement = document.createElement("a");
-                    linkElement.href = file.path;
-                    linkElement.textContent = file.name;
-                    linkElement.target = "_blank";
-                    itemElement.appendChild(linkElement);
-                    listElement.appendChild(itemElement);
-                }
-            }
-            document.body.appendChild(listElement);
-        })();
+      (async () => {
+        const response = await fetch(
+          `https://api.github.com/repos/${
+            location.hostname.match(/(.*)\.github\.io/)[1]
+          }${location.pathname.match(/\/.*\//)[0]}contents/`
+        );
+        const files = await response.json();
+
+        // 创建带样式的列表容器
+        const listElement = document.createElement("ul");
+        listElement.className = "article-list"; // 添加样式类
+
+        for (const file of files) {
+          if (file.name !== "index.html") {
+            const itemElement = document.createElement("li");
+            itemElement.className = "article-item"; // 添加列表项样式
+
+            const linkElement = document.createElement("a");
+            linkElement.className = "article-link"; // 添加链接样式
+            linkElement.href = file.path;
+            linkElement.textContent = file.name;
+            linkElement.target = "_blank";
+
+            itemElement.appendChild(linkElement);
+            listElement.appendChild(itemElement);
+          }
+        }
+        document.body.appendChild(listElement);
+      })();
     </script>
-
-    <body>
-
+  </body>
 </html>
